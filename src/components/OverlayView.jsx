@@ -19,7 +19,7 @@ import {
 
 import { getOffsetOverride, getLayoutStyles } from "../utils/OverlayViewHelper"
 
-import { MAP, ANCHOR, OVERLAY_VIEW } from "../constants"
+import { MAP, ANCHOR, OVERLAY_VIEW, MARKER_CLUSTERER } from "../constants"
 
 /**
  * A wrapper around `google.maps.OverlayView`
@@ -78,7 +78,12 @@ export class OverlayView extends React.PureComponent {
     this.onPositionElement = _.bind(this.onPositionElement, this)
     // You must call setMap() with a valid Map object to trigger the call to
     // the onAdd() method and setMap(null) in order to trigger the onRemove() method.
-    overlayView.setMap(this.context[MAP])
+    const markerClusterer = this.context[MARKER_CLUSTERER]
+    if (markerClusterer) {
+      markerClusterer.addMarker(overlayView, !!this.props.noRedraw)
+    } else {
+      overlayView.setMap(this.context[MAP])
+    }
     this.state = {
       [OVERLAY_VIEW]: overlayView,
     }
@@ -150,6 +155,10 @@ export class OverlayView extends React.PureComponent {
     componentWillUnmount(this)
     const overlayView = this.state[OVERLAY_VIEW]
     if (overlayView) {
+      const markerClusterer = this.context[MARKER_CLUSTERER]
+      if (markerClusterer) {
+        markerClusterer.removeMarker(overlayView, !!this.props.noRedraw)
+      }
       overlayView.setMap(null)
       // You must implement three methods: onAdd(), draw(), and onRemove().
       overlayView.onAdd = null
