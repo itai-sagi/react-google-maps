@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import MarkerClustererPlus from "marker-clusterer-plus"
+import MarkerClustererPlus from "marker-clusterer-plus/src/markerclusterer"
 
 import {
   construct,
