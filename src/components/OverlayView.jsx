@@ -63,6 +63,7 @@ export class OverlayView extends React.PureComponent {
   static contextTypes = {
     [MAP]: PropTypes.object,
     [ANCHOR]: PropTypes.object,
+    [MARKER_CLUSTERER]: PropTypes.object,
   }
 
   /*
@@ -75,6 +76,11 @@ export class OverlayView extends React.PureComponent {
     overlayView.onAdd = _.bind(this.onAdd, this)
     overlayView.draw = _.bind(this.draw, this)
     overlayView.onRemove = _.bind(this.onRemove, this)
+    overlayView.getPosition = () => {
+      return new google.maps.LatLng(props.position)
+    }
+    overlayView.getDraggable = () => {}
+
     this.onPositionElement = _.bind(this.onPositionElement, this)
     // You must call setMap() with a valid Map object to trigger the call to
     // the onAdd() method and setMap(null) in order to trigger the onRemove() method.
@@ -187,6 +193,10 @@ export class OverlayView extends React.PureComponent {
    */
   getProjection() {
     return this.state[OVERLAY_VIEW].getProjection()
+  }
+
+  getPosition() {
+    return this.state[OVERLAY_VIEW].getPosition()
   }
 }
 
